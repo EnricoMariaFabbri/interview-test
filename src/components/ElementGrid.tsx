@@ -13,7 +13,7 @@ export default function ElementGrid({ data }: ElementGridProps) {
 
   return (
     <>
-      <Grid padding={"5"} templateColumns="repeat(3, 1fr)" gap={3}>
+      <Grid padding={"5"} templateColumns="repeat(4, 1fr)" gap={3}>
         {data.map((element: any) => {
           return (
             <Box

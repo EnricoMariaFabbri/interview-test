@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@chakra-ui/react";
+import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import ElementGrid from "./ElementGrid";
 import SearchBar from "./SearchBar";
@@ -9,7 +9,7 @@ export default function MainPage() {
   const [hideGrid, setHideGrid] = useState(true);
 
   function search(filter: string, searchClicked: boolean) {
-    if (!searchClicked) {
+    if (!searchClicked && !hideGrid) {
       setHideGrid(true);
     }
     // I usually use axios, but for this exercise I'll keep it simple
@@ -26,10 +26,12 @@ export default function MainPage() {
       .then(
         (result) => {
           setItems(result);
-          if (searchClicked && result.length === 0) {
+          if (searchClicked && result.length === 0 && !hideGrid) {
             setHideGrid(true);
           } else if (searchClicked) {
-            setHideGrid(false);
+            if (hideGrid) {
+              setHideGrid(false);
+            }
             setPage(0);
           }
         },
@@ -39,7 +41,9 @@ export default function MainPage() {
 
   function setElement(element: any) {
     setPage(0);
-    setHideGrid(false);
+    if (hideGrid) {
+      setHideGrid(false);
+    }
     setItems([element]);
   }
 
@@ -51,22 +55,38 @@ export default function MainPage() {
 
   return (
     <>
-      <Stack justifyContent={"center"} alignItems={"center"} marginTop={"20"}>
-        <Box justifyContent={"center"} alignItems={"center"} w={"60%"}>
+      <Stack justifyContent={"center"} alignItems={"center"}>
+        <Text fontSize={"6xl"} fontWeight={"bold"}>
+          JobPronto
+        </Text>
+        <Box
+          justifyContent={"center"}
+          marginTop={"30"}
+          alignItems={"center"}
+          w={"60%"}
+        >
           <SearchBar
             search={search}
             products={items}
-            isClosed={!hideGrid}
             setElement={setElement}
           ></SearchBar>
         </Box>
       </Stack>
       {!hideGrid && (
-        <Stack marginTop={"10"}>
-          <Stack marginLeft={"10"} direction={"row"}>
+        <Stack marginTop={"10"} marginRight={"5"} marginBottom={"3"}>
+          <Stack direction={"column"}>
+            <Text fontSize={"2xl"} marginLeft={"5"} fontWeight={"bold"}>
+              Results
+            </Text>
+            <ElementGrid
+              data={items.slice(20 * page, 20 * page + 20)}
+            ></ElementGrid>
+          </Stack>
+          <Stack direction={"row"} alignItems={"center"} justifyContent={"end"}>
+            <Text fontWeight={"medium"}>Page: {page}</Text>
             <Button
               disabled={page === 0}
-              color={"red.400"}
+              color={"purple.400"}
               onClick={() => {
                 goToPage(-1);
               }}
@@ -75,7 +95,7 @@ export default function MainPage() {
             </Button>
             <Button
               disabled={items.length > 20 * page + 20 ? false : true}
-              color={"red.400"}
+              color={"purple.400"}
               onClick={() => {
                 goToPage(1);
               }}
@@ -83,9 +103,6 @@ export default function MainPage() {
               Next
             </Button>
           </Stack>
-          <ElementGrid
-            data={items.slice(20 * page, 20 * page + 20)}
-          ></ElementGrid>
         </Stack>
       )}
     </>
