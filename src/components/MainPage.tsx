@@ -79,6 +79,7 @@ export default function MainPage() {
               Results
             </Text>
             <ElementGrid
+              aria-label={"data displayed"}
               data={items.slice(20 * page, 20 * page + 20)}
             ></ElementGrid>
           </Stack>

@@ -16,16 +16,11 @@ test("loads and displays Input Text", async () => {
   expect(searchBar).toHaveValue(newValue);
 });
 
-// test("typeahead is visible", async () => {
-//   render(<MainPage></MainPage>);
+test("typeahead has at least 3 characters", async () => {
+  render(<MainPage></MainPage>);
 
-//   let searchBar = await screen.findByPlaceholderText("Search...");
-//   await userEvent.type(searchBar, "ci");
+  let searchBar = await screen.findByPlaceholderText("Search...");
+  await userEvent.type(searchBar, "ci");
 
-//   expect(screen.queryByLabelText("search bar typeahead")).toBeNull();
-
-//   await userEvent.clear(searchBar);
-//   await userEvent.type(searchBar, "cia");
-
-//   expect(screen.getByLabelText("search bar typeahead")).toBeInTheDocument();
-// });
+  expect(screen.queryByLabelText("search bar typeahead")).toBeNull();
+});
